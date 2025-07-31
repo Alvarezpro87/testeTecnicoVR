@@ -1,43 +1,60 @@
 package com.desafio.backend_pedidos.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class Pedido implements Serializable {
 
-    private Long id;
-    private String descricao;
-    private Double valor;
+    private UUID id;
+    private String produto;
+    private int quantidade;
+    private String dataCriacao;
 
     public Pedido() {
+        this.id = UUID.randomUUID();
+        this.dataCriacao = LocalDateTime.now()
+                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
-    public Pedido(Long id, String descricao, Double valor) {
-        this.id = id;
-        this.descricao = descricao;
-        this.valor = valor;
+    public Pedido(String produto, int quantidade) {
+        this.id = UUID.randomUUID();
+        this.produto = produto;
+        this.quantidade = quantidade;
+        this.dataCriacao = LocalDateTime.now()
+                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getProduto() {
+        return produto;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setProduto(String produto) {
+        this.produto = produto;
     }
 
-    public Double getValor() {
-        return valor;
+    public int getQuantidade() {
+        return quantidade;
     }
 
-    public void setValor(Double valor) {
-        this.valor = valor;
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public String getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(String dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 }
