@@ -11,31 +11,43 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String FILA_PEDIDOS = "pedidos.entrada.alexandre";
-    public static final String DLQ_PEDIDOS = "pedidos.entrada.alexandre.dlq";
-    public static final String EXCHANGE = "pedidos.exchange.alexandre";
-    public static final String ROUTING_KEY = "pedidos.entrada.alexandre";
+    public static final String FILA_PEDIDOS_DLQ = "pedidos.entrada.alexandre.dlq";
+    public static final String FILA_STATUS_SUCESSO = "pedidos.status.sucesso.alexandre";
+    public static final String FILA_STATUS_FALHA = "pedidos.status.falha.alexandre";
+    public static final String EXCHANGE_PEDIDOS = "pedidos.exchange.alexandre";
 
     @Bean
     public Queue queuePedidos() {
-        return QueueBuilder.durable(FILA_PEDIDOS)
-                .withArgument("x-dead-letter-exchange", "")
-                .withArgument("x-dead-letter-routing-key", DLQ_PEDIDOS)
-                .build();
+        return new Queue(FILA_PEDIDOS, true);
     }
 
     @Bean
-    public Queue deadLetterQueue() {
-        return QueueBuilder.durable(DLQ_PEDIDOS).build();
+    public Queue queuePedidosDlq() {
+        return new Queue(FILA_PEDIDOS_DLQ, true);
     }
 
     @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE);
+    public Queue queueStatusSucesso() {
+        return new Queue(FILA_STATUS_SUCESSO, true);
     }
 
     @Bean
-    public Binding pedidosBinding(Queue queuePedidos, TopicExchange exchange) {
-        return BindingBuilder.bind(queuePedidos).to(exchange).with(ROUTING_KEY);
+    public Queue queueStatusFalha() {
+        return new Queue(FILA_STATUS_FALHA, true);
+    }
+
+    // ✅ Criando o Exchange
+    @Bean
+    public DirectExchange pedidosExchange() {
+        return new DirectExchange(EXCHANGE_PEDIDOS);
+    }
+
+    // ✅ Binding da fila com o Exchange e routing key
+    @Bean
+    public Binding bindingPedidos(Queue queuePedidos, DirectExchange pedidosExchange) {
+        return BindingBuilder.bind(queuePedidos)
+                .to(pedidosExchange)
+                .with("pedidos.entrada.alexandre");
     }
 
     @Bean
