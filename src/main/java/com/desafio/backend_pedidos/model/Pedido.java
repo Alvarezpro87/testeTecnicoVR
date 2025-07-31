@@ -1,6 +1,8 @@
 package com.desafio.backend_pedidos.model;
 
-public class Pedido {
+import java.io.Serializable;
+
+public class Pedido implements Serializable {
 
     private Long id;
     private String descricao;
